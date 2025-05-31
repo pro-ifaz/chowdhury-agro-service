@@ -2,12 +2,14 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>চৌধুরী এগ্রো সার্ভিস</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs -->
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -48,55 +50,6 @@
     <p>&copy; 2025 চৌধুরী এগ্রো সার্ভিস</p>
   </footer>
 
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCvGEZTFKPhmvVnvsg6hbu9xKkb8I_BbTg",
-      authDomain: "chowdhury-agro-service-f91dd.firebaseapp.com",
-      projectId: "chowdhury-agro-service-f91dd",
-      storageBucket: "chowdhury-agro-service-f91dd.firebasestorage.app",
-      messagingSenderId: "61632086736",
-      appId: "1:61632086736:web:3b44eb36f16414e0ce54d5",
-      measurementId: "G-VDQYF27GB7",
-      databaseURL: "https://chowdhury-agro-service-f91dd-default-rtdb.firebaseio.com/"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // Add Item Function
-    function addItem() {
-      const name = document.getElementById("itemName").value;
-      const qty = document.getElementById("itemQty").value;
-
-      if (!name || !qty) {
-        alert("দয়া করে জিনিসের নাম এবং পরিমাণ দিন");
-        return;
-      }
-
-      const newItemRef = db.ref("stock").push();
-      newItemRef.set({
-        name: name,
-        qty: parseInt(qty),
-        time: new Date().toLocaleString()
-      });
-
-      document.getElementById("itemName").value = "";
-      document.getElementById("itemQty").value = "";
-    }
-
-    // Show stock in table
-    db.ref("stock").on("value", (snapshot) => {
-      const tbody = document.querySelector("#stockTable tbody");
-      tbody.innerHTML = "";
-      snapshot.forEach((child) => {
-        const item = child.val();
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${item.name}</td><td>${item.qty}</td>`;
-        tbody.appendChild(row);
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,25 +1,58 @@
 body {
   font-family: 'Noto Sans Bengali', sans-serif;
-  background: #f9f9f9;
-  margin: 20px;
+  margin: 0;
+  padding: 0;
+  background: #f8f8f8;
+  color: #333;
 }
-h1, h2 {
-  color: #2e7d32;
+
+header {
+  background: #4caf50;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
+
+nav {
+  background: #2e7d32;
+  padding: 10px;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+main {
+  padding: 20px;
+}
+
 input, button {
   margin: 5px;
-  padding: 8px;
+  padding: 10px;
 }
-section {
-  margin-bottom: 30px;
-}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 20px;
 }
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
 th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   text-align: center;
+}
+
+footer {
+  background: #4caf50;
+  color: white;
+  text-align: center;
+  padding: 10px;
 }
