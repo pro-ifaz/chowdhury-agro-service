@@ -49,24 +49,30 @@
   <footer>
     <p>&copy; 2025 চৌধুরী এগ্রো সার্ভিস</p>
   </footer>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCvGEZTFKPhmvVnvsg6hbu9xKkb8I_BbTg",
+    authDomain: "chowdhury-agro-service-f91dd.firebaseapp.com",
+    projectId: "chowdhury-agro-service-f91dd",
+    storageBucket: "chowdhury-agro-service-f91dd.firebasestorage.app",
+    messagingSenderId: "61632086736",
+    appId: "1:61632086736:web:3b44eb36f16414e0ce54d5",
+    measurementId: "G-VDQYF27GB7"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
   <script>
-    // 🔧 আপনার ফায়ারবেজ কনফিগার বসান এখানে
-    const firebaseConfig = {
-  apiKey: "AIzaSyCeUx9rN6x6_Id_Iu4RxdTlaAXXtAm1fao",
-  authDomain: "chowdhury-agro-service.firebaseapp.com",
-  databaseURL: "https://chowdhury-agro-service-default-rtdb.firebaseio.com",
-  projectId: "chowdhury-agro-service",
-  storageBucket: "chowdhury-agro-service.firebasestorage.app",
-  messagingSenderId: "503009238572",
-  appId: "1:503009238572:web:4326b3a668875bba6e7b89",
-  measurementId: "G-72NHR0V6SF"
-    };
-
-    // ✅ Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
     // ✅ যখন DOM লোড হয় তখন ইভেন্ট অ্যাটাচ করি
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("addBtn").addEventListener("click", addItem);
