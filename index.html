@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>চৌধুরী এগ্রো সার্ভিস</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>চৌধুরী এগ্রো সার্ভিস</h1>
+    <p>গরু-মুরগির খামার ব্যবস্থাপনা ও হিসাব</p>
+  </header>
+
+  <nav>
+    <a href="#inventory">স্টক</a>
+    <a href="#history">হিস্টরি</a>
+  </nav>
+
+  <main>
+    <section id="inventory">
+      <h2>স্টক ম্যানেজমেন্ট</h2>
+      <input type="text" id="itemName" placeholder="জিনিসের নাম" />
+      <input type="number" id="itemQty" placeholder="পরিমাণ" />
+      <button onclick="addItem()">স্টকে যোগ করুন</button>
+      <button onclick="removeItem()">স্টক থেকে বাদ দিন</button>
+
+      <table id="stockTable">
+        <thead>
+          <tr>
+            <th>জিনিসের নাম</th>
+            <th>পরিমাণ</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="history">
+      <h2>স্টক হিস্টরি</h2>
+      <ul id="historyList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 চৌধুরী এগ্রো সার্ভিস</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
