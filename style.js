@@ -5,10 +5,13 @@ function addItem() {
   const name = document.getElementById('itemName').value.trim();
   const qty = parseInt(document.getElementById('itemQty').value);
 
-  if (!name || isNaN(qty)) return alert('সঠিকভাবে তথ্য দিন।');
+  if (!name || isNaN(qty)) {
+    alert('জিনিসের নাম ও পরিমাণ সঠিকভাবে দিন।');
+    return;
+  }
 
   stock[name] = (stock[name] || 0) + qty;
-  history.unshift(`${new Date().toLocaleString()} - ${name} (${qty}) যোগ করা হয়েছে।`);
+  history.unshift(`${new Date().toLocaleString()} - ${qty} ${name} যোগ হয়েছে।`);
 
   updateTable();
   updateHistory();
@@ -21,15 +24,19 @@ function removeItem() {
   const name = document.getElementById('itemName').value.trim();
   const qty = parseInt(document.getElementById('itemQty').value);
 
-  if (!name || isNaN(qty)) return alert('সঠিকভাবে তথ্য দিন।');
+  if (!name || isNaN(qty)) {
+    alert('জিনিসের নাম ও পরিমাণ সঠিকভাবে দিন।');
+    return;
+  }
 
   if (!stock[name] || stock[name] < qty) {
-    return alert('এই পরিমাণে জিনিস স্টকে নেই।');
+    alert('এই পরিমাণে স্টকে এই জিনিস নেই।');
+    return;
   }
 
   stock[name] -= qty;
   if (stock[name] === 0) delete stock[name];
-  history.unshift(`${new Date().toLocaleString()} - ${name} (${qty}) বাদ দেয়া হয়েছে।`);
+  history.unshift(`${new Date().toLocaleString()} - ${qty} ${name} বাদ দেয়া হয়েছে।`);
 
   updateTable();
   updateHistory();
@@ -41,16 +48,18 @@ function removeItem() {
 function updateTable() {
   const tbody = document.getElementById('stockTable').querySelector('tbody');
   tbody.innerHTML = '';
-  for (let key in stock) {
-    let row = `<tr><td>${key}</td><td>${stock[key]}</td></tr>`;
+  for (const item in stock) {
+    const row = `<tr><td>${item}</td><td>${stock[item]}</td></tr>`;
     tbody.innerHTML += row;
   }
 }
 
 function updateHistory() {
-  const ul = document.getElementById('historyList');
-  ul.innerHTML = '';
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
   history.slice(0, 10).forEach(entry => {
-    ul.innerHTML += `<li>${entry}</li>`;
+    const li = document.createElement('li');
+    li.textContent = entry;
+    list.appendChild(li);
   });
 }
