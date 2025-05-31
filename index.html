@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>চৌধুরী এগ্রো সার্ভিস</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Noto Sans Bengali', sans-serif; background: #f9f9f9; margin: 20px; }
     h1, h2 { color: #2e7d32; }
@@ -19,9 +19,9 @@
 
   <section>
     <h2>আর্থিক লেনদেন</h2>
-    <input type="number" id="cost" placeholder="ব্যয় (৳)" />
+    <input type="number" id="cost" placeholder="ব্যয় (৳)" min="0" />
     <button onclick="addCost()">ব্যয় যোগ করুন</button>
-    <input type="number" id="income" placeholder="ইনকাম (৳)" />
+    <input type="number" id="income" placeholder="ইনকাম (৳)" min="0" />
     <button onclick="addIncome()">ইনকাম যোগ করুন</button>
     <p>মোট খরচ: <span id="totalCost">0</span>৳</p>
     <p>মোট ইনকাম: <span id="totalIncome">0</span>৳</p>
@@ -29,15 +29,15 @@
 
   <section>
     <h2>স্টক রেকর্ড</h2>
-    <input type="number" id="chickenIn" placeholder="মুরগি ঢুকেছে" />
+    <input type="number" id="chickenIn" placeholder="মুরগি ঢুকেছে" min="0" />
     <button onclick="addStock('chickenIn')">যোগ করুন</button>
-    <input type="number" id="chickenOut" placeholder="মুরগি বের হয়েছে" />
+    <input type="number" id="chickenOut" placeholder="মুরগি বের হয়েছে" min="0" />
     <button onclick="addStock('chickenOut')">যোগ করুন</button>
-    <input type="number" id="eggs" placeholder="মুরগির ডিম" />
+    <input type="number" id="eggs" placeholder="মুরগির ডিম" min="0" />
     <button onclick="addStock('eggs')">যোগ করুন</button><br>
-    <input type="number" id="cowIn" placeholder="গরু ঢুকেছে" />
+    <input type="number" id="cowIn" placeholder="গরু ঢুকেছে" min="0" />
     <button onclick="addStock('cowIn')">যোগ করুন</button>
-    <input type="number" id="cowOut" placeholder="গরু বিক্রি হয়েছে" />
+    <input type="number" id="cowOut" placeholder="গরু বিক্রি হয়েছে" min="0" />
     <button onclick="addStock('cowOut')">যোগ করুন</button>
 
     <table>
@@ -55,14 +55,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script>
     const firebaseConfig = {
-  apiKey: "AIzaSyCeUx9rN6x6_Id_Iu4RxdTlaAXXtAm1fao",
-  authDomain: "chowdhury-agro-service.firebaseapp.com",
-  databaseURL: "https://chowdhury-agro-service-default-rtdb.firebaseio.com",
-  projectId: "chowdhury-agro-service",
-  storageBucket: "chowdhury-agro-service.firebasestorage.app",
-  messagingSenderId: "503009238572",
-  appId: "1:503009238572:web:4326b3a668875bba6e7b89"
+      apiKey: "AIzaSyCeUx9rN6x6_Id_Iu4RxdTlaAXXtAm1fao",
+      authDomain: "chowdhury-agro-service.firebaseapp.com",
+      databaseURL: "https://chowdhury-agro-service-default-rtdb.firebaseio.com",
+      projectId: "chowdhury-agro-service",
+      storageBucket: "chowdhury-agro-service.firebasestorage.app",
+      messagingSenderId: "503009238572",
+      appId: "1:503009238572:web:4326b3a668875bba6e7b89"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -70,39 +71,47 @@
 
     function addCost() {
       const value = parseFloat(document.getElementById('cost').value);
-      if (!value) return;
+      if (isNaN(value) || value <= 0) return alert('সঠিক ব্যয় পরিমাণ দিন');
       updateTotal('cost', value);
+      document.getElementById('cost').value = '';
     }
 
     function addIncome() {
       const value = parseFloat(document.getElementById('income').value);
-      if (!value) return;
+      if (isNaN(value) || value <= 0) return alert('সঠিক ইনকাম পরিমাণ দিন');
       updateTotal('income', value);
+      document.getElementById('income').value = '';
     }
 
     function addStock(type) {
       const value = parseFloat(document.getElementById(type).value);
-      if (!value) return;
+      if (isNaN(value) || value <= 0) return alert('সঠিক পরিমাণ দিন');
       updateTotal(type, value);
+      document.getElementById(type).value = '';
     }
 
     function updateTotal(field, value) {
       const ref = db.ref('totals/' + field);
-      ref.once('value', snapshot => {
-        const current = snapshot.val() || 0;
-        ref.set(current + value);
+      ref.transaction(current => {
+        return (current || 0) + value;
       });
     }
 
     function render() {
       totals.forEach(key => {
         db.ref('totals/' + key).on('value', snapshot => {
-          document.getElementById(key + 'Val').innerText = snapshot.val() || 0;
-          if (key === 'cost') document.getElementById('totalCost').innerText = snapshot.val() || 0;
-          if (key === 'income') document.getElementById('totalIncome').innerText = snapshot.val() || 0;
+          const val = snapshot.val() || 0;
+          const elId = (key === 'cost' || key === 'income') ? 'total' + capitalize(key) : key + 'Val';
+          const el = document.getElementById(elId);
+          if (el) el.innerText = val;
         });
       });
     }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
     render();
   </script>
 </body>
