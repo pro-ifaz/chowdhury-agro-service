@@ -2,60 +2,58 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>চৌধুরী এগ্রো সার্ভিস</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Noto Sans Bengali', sans-serif; background: #f9f9f9; margin: 20px; }
-    h1, h2 { color: #2e7d32; }
-    input, button { margin: 5px; padding: 8px; }
-    section { margin-bottom: 30px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-  <h1>চৌধুরী এগ্রো সার্ভিস</h1>
+  <header>
+    <h1>চৌধুরী এগ্রো সার্ভিস</h1>
+    <p>গরু-মুরগির খামার ব্যবস্থাপনা ও হিসাব</p>
+  </header>
 
-  <section>
-    <h2>আর্থিক লেনদেন</h2>
-    <input type="number" id="cost" placeholder="ব্যয় (৳)" min="0" />
-    <button onclick="addCost()">ব্যয় যোগ করুন</button>
-    <input type="number" id="income" placeholder="ইনকাম (৳)" min="0" />
-    <button onclick="addIncome()">ইনকাম যোগ করুন</button>
-    <p>মোট খরচ: <span id="totalCost">0</span>৳</p>
-    <p>মোট ইনকাম: <span id="totalIncome">0</span>৳</p>
-  </section>
+  <nav>
+    <a href="#inventory">স্টক</a>
+    <a href="#history">হিস্টরি</a>
+  </nav>
 
-  <section>
-    <h2>স্টক রেকর্ড</h2>
-    <input type="number" id="chickenIn" placeholder="মুরগি ঢুকেছে" min="0" />
-    <button onclick="addStock('chickenIn')">যোগ করুন</button>
-    <input type="number" id="chickenOut" placeholder="মুরগি বের হয়েছে" min="0" />
-    <button onclick="addStock('chickenOut')">যোগ করুন</button>
-    <input type="number" id="eggs" placeholder="মুরগির ডিম" min="0" />
-    <button onclick="addStock('eggs')">যোগ করুন</button><br>
-    <input type="number" id="cowIn" placeholder="গরু ঢুকেছে" min="0" />
-    <button onclick="addStock('cowIn')">যোগ করুন</button>
-    <input type="number" id="cowOut" placeholder="গরু বিক্রি হয়েছে" min="0" />
-    <button onclick="addStock('cowOut')">যোগ করুন</button>
+  <main>
+    <section id="inventory">
+      <h2>স্টক ম্যানেজমেন্ট</h2>
+      <input type="text" id="itemName" placeholder="জিনিসের নাম" />
+      <input type="number" id="itemQty" placeholder="পরিমাণ" />
+      <button id="addBtn">স্টকে যোগ করুন</button>
 
-    <table>
-      <tr><th>ক্যাটাগরি</th><th>পরিমাণ</th></tr>
-      <tr><td>মোট মুরগি ঢুকেছে</td><td id="chickenInVal">0</td></tr>
-      <tr><td>মোট মুরগি বের হয়েছে</td><td id="chickenOutVal">0</td></tr>
-      <tr><td>মোট ডিম</td><td id="eggsVal">0</td></tr>
-      <tr><td>মোট গরু ঢুকেছে</td><td id="cowInVal">0</td></tr>
-      <tr><td>মোট গরু বিক্রি হয়েছে</td><td id="cowOutVal">0</td></tr>
-    </table>
-  </section>
+      <table id="stockTable">
+        <thead>
+          <tr>
+            <th>জিনিসের নাম</th>
+            <th>পরিমাণ</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </section>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <section id="history">
+      <h2>স্টক হিস্টরি</h2>
+      <ul id="historyList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 চৌধুরী এগ্রো সার্ভিস</p>
+  </footer>
+
   <script>
+    // 🔧 আপনার ফায়ারবেজ কনফিগার বসান এখানে
     const firebaseConfig = {
- apiKey: "AIzaSyCeUx9rN6x6_Id_Iu4RxdTlaAXXtAm1fao",
+  apiKey: "AIzaSyCeUx9rN6x6_Id_Iu4RxdTlaAXXtAm1fao",
   authDomain: "chowdhury-agro-service.firebaseapp.com",
   databaseURL: "https://chowdhury-agro-service-default-rtdb.firebaseio.com",
   projectId: "chowdhury-agro-service",
@@ -65,55 +63,55 @@
   measurementId: "G-72NHR0V6SF"
     };
 
+    // ✅ Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const totals = ['cost', 'income', 'chickenIn', 'chickenOut', 'eggs', 'cowIn', 'cowOut'];
+    // ✅ যখন DOM লোড হয় তখন ইভেন্ট অ্যাটাচ করি
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("addBtn").addEventListener("click", addItem);
+    });
 
-    function addCost() {
-      const value = parseFloat(document.getElementById('cost').value);
-      if (isNaN(value) || value <= 0) return alert('সঠিক ব্যয় পরিমাণ দিন');
-      updateTotal('cost', value);
-      document.getElementById('cost').value = '';
-    }
+    function addItem() {
+      const nameInput = document.getElementById("itemName");
+      const qtyInput = document.getElementById("itemQty");
+      const name = nameInput.value.trim();
+      const qty = parseInt(qtyInput.value.trim());
 
-    function addIncome() {
-      const value = parseFloat(document.getElementById('income').value);
-      if (isNaN(value) || value <= 0) return alert('সঠিক ইনকাম পরিমাণ দিন');
-      updateTotal('income', value);
-      document.getElementById('income').value = '';
-    }
+      if (!name || isNaN(qty)) {
+        alert("সঠিকভাবে নাম ও পরিমাণ দিন");
+        return;
+      }
 
-    function addStock(type) {
-      const value = parseFloat(document.getElementById(type).value);
-      if (isNaN(value) || value <= 0) return alert('সঠিক পরিমাণ দিন');
-      updateTotal(type, value);
-      document.getElementById(type).value = '';
-    }
+      console.log("Adding item:", name, qty); // ✅ Debugging
 
-    function updateTotal(field, value) {
-      const ref = db.ref('totals/' + field);
-      ref.transaction(current => {
-        return (current || 0) + value;
+      // ✅ Firebase Realtime Database এ লেখা
+      db.ref("stock/" + name).set({
+        quantity: qty,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        console.log("Data written to Firebase");
+
+        // ✅ Table update
+        const tbody = document.querySelector("#stockTable tbody");
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${name}</td><td>${qty}</td>`;
+        tbody.appendChild(row);
+
+        // ✅ History update
+        const historyList = document.getElementById("historyList");
+        const li = document.createElement("li");
+        li.textContent = `${name} (${qty}) স্টকে যোগ হয়েছে`;
+        historyList.appendChild(li);
+
+        // ✅ Clear input
+        nameInput.value = "";
+        qtyInput.value = "";
+      }).catch((error) => {
+        console.error("Firebase write failed:", error);
+        alert("Firebase-এ লেখা যায়নি। Console চেক করুন।");
       });
     }
-
-    function render() {
-      totals.forEach(key => {
-        db.ref('totals/' + key).on('value', snapshot => {
-          const val = snapshot.val() || 0;
-          const elId = (key === 'cost' || key === 'income') ? 'total' + capitalize(key) : key + 'Val';
-          const el = document.getElementById(elId);
-          if (el) el.innerText = val;
-        });
-      });
-    }
-
-    function capitalize(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-
-    render();
   </script>
 </body>
 </html>
